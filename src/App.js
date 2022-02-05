@@ -1,25 +1,23 @@
 import axios from "axios";
-import {useEffect, useState} from "react"
+import { useEffect, useState } from "react";
 
-import UserSignIn from "./Components/UserSignIn"
+import UserSignIn from "./Components/UserSignIn";
 
 function App() {
   const [api, setApi] = useState();
   useEffect(() => {
-    axios.get('http://localhost:5000/')
-        .then((res) => {
-          setApi(res)
-          console.log(res)})
-        .catch((err) => console.log(err))
-  }, [])
+    axios
+      .get("http://localhost:5000/")
+      .then((res) => {
+        setApi(res);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <div className="App">
-      {
-        api != null ? api["data"] : "..."
-      
-      }
-      <UserSignIn/>
+      {api != null ? api["data"] : "..."}
+      <UserSignIn />
     </div>
   );
 }

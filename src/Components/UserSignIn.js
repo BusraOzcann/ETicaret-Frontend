@@ -1,39 +1,45 @@
 import React from "react";
-import { useFormik } from 'formik';
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 function UserSignIn() {
-
-    const formik = useFormik({
-        initialValues: {
-            fname: '',
-            lname: '',
-            mail: '',
-            pw1: '',
-        },
-        onSubmit: values => {
-            console.log(values);
-        }
+    let schema = yup.object().shape({
+        fname: yup.string().required(),
+        lname: yup.string().required(),
+        mail: yup.string().required(),
+        pw1: yup.string().required(),
     })
 
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(schema)
+    });
+
+    const onSubmit = data => {
+        axios.post("http://localhost:5000/register", data).then(res=> console.log(res))
+    }
 
   return (
       <div>
-        <form action="http://localhost:5000/register" method="POST">
-
+        <form onSubmit={handleSubmit(onSubmit)}>
                 <label htmlFor="fname">Adınız : </label> 
-                <input type="text" id="fname" name="fname" /> 
+                <input {...register("fname")} />
+                {errors.fname && <span>This field is required.</span>}
                 <br/>
                 <label htmlFor="lname">Soyadınız : </label>
-                <input type="text" id="lname" name="lname" /> 
+                <input {...register("lname")} />
+                {errors.lname && <span>This field is required.</span>}
                 <br/>
-                <label htmlFor="mail">E-mail : </label> 
-                <input type="email" id="mail" name="mail" /> 
+                <label htmlFor="mail"  >E-mail : </label> 
+                <input {...register("mail")} />
+                {errors.mail && <span>This field is required.</span>}
                 <br/>
                 <label htmlFor="pw1">Şifre : </label> 
-                <input type="password" id="pw1" name="pw1" />
+                <input type="password"  {...register("pw1")} />
+                {errors.pw1 && <span>This field is required.</span>}
                 <br/>
-                <button type="submit"> Kayıt Ol </button>
-            
+                <button type="submit"> Kayıt Ol </button>   
         </form>
       </div>
   )
